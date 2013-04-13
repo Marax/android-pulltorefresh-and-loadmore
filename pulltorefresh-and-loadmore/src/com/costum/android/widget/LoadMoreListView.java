@@ -69,18 +69,15 @@ public class LoadMoreListView extends ListView implements OnScrollListener {
 
 	private void init(Context context) {
 
-		mInflater = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 		// footer
-		mFooterView = (RelativeLayout) mInflater.inflate(
-				R.layout.load_more_footer, this, false);
+		mFooterView = (RelativeLayout) mInflater.inflate(R.layout.load_more_footer, this, false);
 		/*
 		 * mLabLoadMore = (TextView) mFooterView
 		 * .findViewById(R.id.load_more_lab_view);
 		 */
-		mProgressBarLoadMore = (ProgressBar) mFooterView
-				.findViewById(R.id.load_more_progressBar);
+		mProgressBarLoadMore = (ProgressBar) mFooterView.findViewById(R.id.load_more_progressBar);
 
 		addFooterView(mFooterView);
 
@@ -113,15 +110,16 @@ public class LoadMoreListView extends ListView implements OnScrollListener {
 	 */
 
 	public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
-		mOnLoadMoreListener = onLoadMoreListener;
+		if (onLoadMoreListener != null)
+			mOnLoadMoreListener = onLoadMoreListener;
+		else
+			mProgressBarLoadMore.setVisibility(View.GONE);
 	}
 
-	public void onScroll(AbsListView view, int firstVisibleItem,
-			int visibleItemCount, int totalItemCount) {
+	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
 		if (mOnScrollListener != null) {
-			mOnScrollListener.onScroll(view, firstVisibleItem,
-					visibleItemCount, totalItemCount);
+			mOnScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
 		}
 
 		if (mOnLoadMoreListener != null) {
@@ -134,8 +132,7 @@ public class LoadMoreListView extends ListView implements OnScrollListener {
 
 			boolean loadMore = firstVisibleItem + visibleItemCount >= totalItemCount;
 
-			if (!mIsLoadingMore && loadMore
-					&& mCurrentScrollState != SCROLL_STATE_IDLE) {
+			if (!mIsLoadingMore && loadMore && mCurrentScrollState != SCROLL_STATE_IDLE) {
 				mProgressBarLoadMore.setVisibility(View.VISIBLE);
 				// mLabLoadMore.setVisibility(View.VISIBLE);
 				mIsLoadingMore = true;
